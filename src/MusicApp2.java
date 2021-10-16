@@ -1,21 +1,24 @@
 import javax.sound.midi.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
-public class MiniMusicApp {
+public class MusicApp2 {
     public static void main(String[] args) {
-        MiniMusicApp mini = new MiniMusicApp();
-        mini.play();
+        MusicApp2 ma2 = new MusicApp2();
+        ma2.play();
     }
 
     public void play() {
         try {
             Sequence seq = new Sequence(Sequence.PPQ, 4);
             Track track = seq.createTrack();
-            ShortMessage a = new ShortMessage(144, 1, 44, 100);
-            MidiEvent noteOn = new MidiEvent(a, 1);
+            ShortMessage a = new ShortMessage(ShortMessage.PROGRAM_CHANGE, 1, 10, 0);
+            MidiEvent changeInstrument = new MidiEvent(a, 1);
+            ShortMessage b = new ShortMessage(ShortMessage.NOTE_ON, 1, 44, 100);
+            MidiEvent noteOn = new MidiEvent(b, 1);
+            track.add(changeInstrument);
             track.add(noteOn);
-            ShortMessage b = new ShortMessage(128, 1, 44, 100);
-            MidiEvent noteOff = new MidiEvent(b, 16);
-            track.add(noteOff);
             Sequencer player = MidiSystem.getSequencer();
             player.open();
             player.setSequence(seq);
